@@ -1,24 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
+:root {
+    --background-color: #0e1117;
+    --secondary-background-color: #262730;
+    --text-color: #fafafa;
+    --primary-color: #3B82F6;
+}
+
 /* ── Reset & Base ─────────────────────────────────────────── */
-html, body, [class*="css"] {
-    font-family: 'Inter', -apple-system, sans-serif !important;
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    background-image: radial-gradient(rgba(128, 128, 128, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+    min-height: 100vh;
 }
 
-.stApp {
-    background-color: var(--background-color) !important;
-    background-image: radial-gradient(rgba(128, 128, 128, 0.12) 1px, transparent 1px) !important;
-    background-size: 24px 24px !important;
+.container {
+    padding-top: 5.5rem;
+    padding-bottom: 4rem;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
-.main .block-container {
-    padding-top: 5.5rem !important;
-    padding-bottom: 4rem !important;
-    max-width: 1240px !important;
-}
-
-/* ── Hero Layout ──────────────────────────────────────────── */
 /* ── Navbar ───────────────────────────────────────────────── */
 .navbar {
     position: fixed;
@@ -32,12 +42,7 @@ html, body, [class*="css"] {
     display: flex;
     align-items: center;
     padding: 0 2rem;
-    gap: 4rem; /* Keeps links close to the logo, leaving the right side empty for Streamlit controls */
-}
-
-/* Ensure Streamlit's native header floats seamlessly over our navbar */
-[data-testid="stHeader"] {
-    background: transparent !important;
+    gap: 4rem;
 }
 
 .nav-brand {
@@ -45,7 +50,7 @@ html, body, [class*="css"] {
     align-items: center;
     gap: 0.9rem;
     font-family: 'Inter', sans-serif;
-    font-size: 1.4rem; /* Increased size */
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--text-color);
     letter-spacing: -0.02em;
@@ -57,14 +62,14 @@ html, body, [class*="css"] {
 }
 
 .nav-logo svg {
-    width: 28px; /* Increased logo size */
+    width: 28px;
     height: 28px;
 }
 
 .nav-links {
     display: flex;
     gap: 2rem;
-    font-size: 0.95rem; /* Increased size */
+    font-size: 0.95rem;
     font-weight: 500;
     color: var(--text-color);
     opacity: 0.7;
@@ -78,9 +83,10 @@ html, body, [class*="css"] {
 
 .nav-link:hover {
     opacity: 1;
-    color: var(--primary-color, #3B82F6);
+    color: var(--primary-color);
 }
 
+/* ── Hero ──────────────────────────────────────────── */
 .hero {
     display: flex;
     align-items: center;
@@ -96,7 +102,7 @@ html, body, [class*="css"] {
     font-size: 0.62rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--primary-color, #2563EB);
+    color: var(--primary-color);
     margin-bottom: 0.9rem;
     opacity: 0.85;
 }
@@ -111,7 +117,7 @@ html, body, [class*="css"] {
     margin: 0 0 0.9rem;
 }
 
-.hero-title .accent { color: var(--primary-color, #3B82F6); }
+.hero-title .accent { color: var(--primary-color); }
 
 .hero-desc {
     font-size: 0.82rem;
@@ -171,6 +177,9 @@ html, body, [class*="css"] {
     margin: -22px 0 0 -22px;
     border-radius: 50%;
     border: 1px solid transparent;
+}
+.orb-wrap.online .orb-ring,
+.orb-wrap.offline .orb-ring {
     animation: sonar 3.6s ease-out infinite;
 }
 .orb-ring:nth-child(2) { animation-delay: 1.2s; }
@@ -231,143 +240,165 @@ html, body, [class*="css"] {
     letter-spacing: 0.14em;
 }
 
-/* ── Metric Cards ─────────────────────────────────────────── */
-[data-testid="stMetric"] {
-    background: var(--secondary-background-color) !important;
-    border: 1px solid rgba(128,128,128,0.15) !important;
-    border-left: 3px solid rgba(128,128,128,0.3) !important;
-    border-radius: 10px !important;
-    padding: 1.1rem 1.4rem !important;
-    transition: border-left-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
-    position: relative !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+/* ── Metrics ─────────────────────────────────────────── */
+.metrics-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-[data-testid="stMetric"]:hover {
-    border-left-color: var(--primary-color, #3B82F6) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+.metric-card {
+    flex: 1;
+    background: var(--secondary-background-color);
+    border: 1px solid rgba(128,128,128,0.15);
+    border-left: 3px solid rgba(128,128,128,0.3);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    transition: border-left-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-[data-testid="stMetricLabel"] {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.58rem !important;
-    color: var(--text-color) !important;
-    opacity: 0.7 !important;
-    font-weight: 400 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.22em !important;
+.metric-card:hover {
+    border-left-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
-[data-testid="stMetricValue"] {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 1.45rem !important;
-    font-weight: 600 !important;
-    color: var(--text-color) !important;
-    letter-spacing: -0.025em !important;
-    background: none !important;
-    -webkit-text-fill-color: var(--text-color) !important;
-    line-height: 1.2 !important;
+.metric-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    margin-bottom: 0.4rem;
 }
 
-[data-testid="stMetricDelta"] {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.6rem !important;
+.metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: var(--text-color);
+    letter-spacing: -0.025em;
+    line-height: 1.2;
 }
+
+/* ── Main Layout ───────────────────────────────────────── */
+.main-content {
+    display: flex;
+    gap: 4rem;
+}
+.left-col { flex: 2.5; }
+.right-col { flex: 1.05; }
 
 /* ── Section Labels ───────────────────────────────────────── */
 h3 {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.54rem !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.25em !important;
-    text-transform: uppercase !important;
-    color: var(--text-color) !important;
-    margin-bottom: 1rem !important;
-    padding-bottom: 0.65rem !important;
-    border-bottom: 1px solid rgba(128,128,128,0.15) !important;
-    display: block !important;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-color);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid rgba(128,128,128,0.15);
 }
 
-/* ── Run Button ───────────────────────────────────────────── */
-.stButton > button {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 0.78rem !important;
-    font-weight: 500 !important;
-    background: var(--secondary-background-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid rgba(128,128,128,0.25) !important;
-    border-radius: 7px !important;
-    padding: 0.55rem 1.2rem !important;
-    letter-spacing: 0.01em !important;
-    transition: all 0.15s ease !important;
-    box-shadow: none !important;
+.mt-8 { margin-top: 2rem; }
+
+/* ── Buttons ───────────────────────────────────────────── */
+.run-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--secondary-background-color);
+    color: var(--text-color);
+    border: 1px solid rgba(128,128,128,0.25);
+    border-radius: 7px;
+    padding: 0.55rem 1.2rem;
+    letter-spacing: 0.01em;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    width: 25%;
+    min-width: 150px;
+    margin-bottom: 1rem;
 }
 
-.stButton > button:hover {
-    background: var(--background-color) !important;
-    color: var(--primary-color, #3B82F6) !important;
-    border-color: var(--primary-color, #3B82F6) !important;
+.run-btn:hover {
+    background: var(--background-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.run-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* ── Notifications ────────────────────────────────────────── */
-[data-testid="stNotification"] {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.7rem !important;
-    border-radius: 8px !important;
-    letter-spacing: 0.01em !important;
-    background: var(--secondary-background-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid rgba(128,128,128,0.2) !important;
+.notification {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    border-radius: 8px;
+    letter-spacing: 0.01em;
+    background: var(--secondary-background-color);
+    color: var(--text-color);
+    border: 1px solid rgba(128,128,128,0.2);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.notification.info { border-color: rgba(59,130,246,0.3); background: rgba(59,130,246,0.05); color: #60A5FA; }
+.notification.success { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.05); color: #34D399; }
+.notification.error { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.05); color: #F87171; }
+
+.notification strong { font-weight: 600; color: white; }
+
+/* ── Code / Blocks ───────────────────────────────── */
+code, pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.67rem;
+    line-height: 1.7;
 }
 
-/* ── Code / Terminal blocks ───────────────────────────────── */
-[data-testid="stCodeBlock"] pre, [data-testid="stCodeBlock"] code {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.67rem !important;
-    line-height: 1.7 !important;
-    background: var(--secondary-background-color) !important;
-    border: 1px solid rgba(128,128,128,0.15) !important;
-    border-radius: 6px !important;
-    color: var(--text-color) !important;
+.resource-block, .log-block {
+    background: var(--secondary-background-color);
+    border: 1px solid rgba(128,128,128,0.15);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
 }
 
-/* ── Expander ─────────────────────────────────────────────── */
-.streamlit-expanderHeader {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.58rem !important;
-    letter-spacing: 0.18em !important;
-    text-transform: uppercase !important;
-    color: var(--text-color) !important;
-    opacity: 0.8 !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 0 0 0.5rem !important;
-}
-
-[data-testid="stExpander"] {
-    border: none !important;
-    background: transparent !important;
+.log-entry {
+    margin-bottom: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.67rem;
+    color: var(--text-color);
+    white-space: pre;
 }
 
 /* ── Divider ──────────────────────────────────────────────── */
-hr {
-    border: none !important;
-    border-top: 1px solid rgba(128,128,128,0.15) !important;
-    margin: 1.75rem 0 !important;
+.divider {
+    border: none;
+    border-top: 1px solid rgba(128,128,128,0.15);
+    margin: 1.75rem 0;
 }
 
 /* ── Caption ──────────────────────────────────────────────── */
-[data-testid="stCaptionContainer"] {
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.57rem !important;
-    color: var(--text-color) !important;
-    opacity: 0.7 !important;
-    letter-spacing: 0.05em !important;
+.caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.57rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
 }
 
-/* ── Scrollbar ────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.4); }
+/* ── Chart ──────────────────────────────────────────────── */
+.chart-container {
+    position: relative;
+    height: 200px;
+    width: 100%;
+    margin-top: 1rem;
+}

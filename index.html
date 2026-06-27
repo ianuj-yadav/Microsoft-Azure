@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpsCenter · Azure AI</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
   <div class="navbar">
     <div class="nav-brand">
       <div class="nav-logo">
@@ -26,25 +28,94 @@
     </div>
   </div>
 
-  <div class="hero">
-    <div class="hero-left">
-      <div class="eyebrow">Azure AI · anuj-ai · Central India</div>
-      <div class="hero-title">Ops<span class="accent">Center</span></div>
-      <div class="hero-desc">Endpoint telemetry for anuj-ai cognitive services.<br>Probe the endpoint to measure reachability and response latency.</div>
-      <div class="pill {orb_cls}">
-        <span class="pill-dot"></span>
-        {pill_txt}
+  <div class="container">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="eyebrow">Azure AI · anuj-ai · Central India</div>
+        <div class="hero-title">Ops<span class="accent">Center</span></div>
+        <div class="hero-desc">Endpoint telemetry for anuj-ai cognitive services.<br>Probe the endpoint to measure reachability and response latency.</div>
+        <div class="pill idle" id="status-pill">
+          <span class="pill-dot"></span>
+          <span id="pill-text">IDLE · NO PROBE</span>
+        </div>
+      </div>
+      <div class="orb-wrap idle" id="orb">
+        <div class="orb-ring"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-core">
+          <span class="orb-val" id="orb-val">—</span>
+          <span class="orb-lbl">latency</span>
+        </div>
       </div>
     </div>
-    <div class="orb-wrap {orb_cls}">
-      <div class="orb-ring"></div>
-      <div class="orb-ring"></div>
-      <div class="orb-ring"></div>
-      <div class="orb-core">
-        <span class="orb-val">{orb_val}</span>
-        <span class="orb-lbl">latency</span>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">SERVICE</div>
+        <div class="metric-value">Cognitive API</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">AVG LATENCY</div>
+        <div class="metric-value"><span id="metric-avg">0</span> ms</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">P95 LATENCY</div>
+        <div class="metric-value"><span id="metric-p95">0</span> ms</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">UPTIME</div>
+        <div class="metric-value"><span id="metric-uptime">100.0</span>%</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="main-content">
+      <div class="left-col">
+        <h3>Probe</h3>
+        
+        <div class="probe-controls">
+          <button class="run-btn" id="run-btn">▶ Run Diagnostic</button>
+        </div>
+
+        <div class="notification info" id="notification">
+          <span class="icon">ℹ️</span> No probe data yet. Click <strong>▶ Run Diagnostic</strong> to begin.
+        </div>
+
+        <h3 class="mt-8">Response Time · Last 60 Probes</h3>
+        <div class="chart-container">
+          <canvas id="latencyChart"></canvas>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <h3>Resource</h3>
+        <div class="resource-block">
+          <code>
+Group     Azure AI Project anuj
+Sub       Azure for Students
+Tier      S0 Standard
+Access    Public
+Protocol  HTTPS / TLS 1.2
+Region    Central India
+          </code>
+        </div>
+
+        <h3 class="mt-8">Activity Log</h3>
+        <div class="log-block">
+          <div id="log-content">
+            <div class="caption">No activity recorded.</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <div class="caption">Target: <code style="padding: 2px 4px; background: rgba(128,128,128,0.1); border-radius: 4px;">https://anuj-ai.cognitiveservices.azure.com/</code></div>
+        <div class="caption">Manual refresh · click ▶ Run Diagnostic to probe</div>
       </div>
     </div>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

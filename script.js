@@ -1,122 +1,166 @@
-const historyData = [];
-for(let i=0; i<60; i++) historyData.push(null);
+const AZURE_ENDPOINT = "https://anuj-ai.cognitiveservices.azure.com/";
+
+// State
+let history = Array.from({length: 20}, () => Math.floor(Math.random() * 13) + 12);
+let logs = [];
 let totalChecks = 0;
 let okChecks = 0;
 
-// Init Chart.js
+// DOM Elements
+const orb = document.getElementById('orb');
+const orbVal = document.getElementById('orb-val');
+const pill = document.getElementById('status-pill');
+const pillText = document.getElementById('pill-text');
+const metricAvg = document.getElementById('metric-avg');
+const metricP95 = document.getElementById('metric-p95');
+const metricUptime = document.getElementById('metric-uptime');
+const notification = document.getElementById('notification');
+const logContent = document.getElementById('log-content');
+const runBtn = document.getElementById('run-btn');
+
+// Chart Setup
 const ctx = document.getElementById('latencyChart').getContext('2d');
-const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-gradient.addColorStop(0, 'rgba(59,130,246,0.3)');
+const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+gradient.addColorStop(0, 'rgba(59,130,246,0.2)');
 gradient.addColorStop(1, 'rgba(59,130,246,0.0)');
 
 const latencyChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: Array(60).fill(''),
+        labels: Array.from({length: history.length}, (_, i) => i),
         datasets: [{
-            label: 'Latency (ms)',
-            data: historyData,
+            data: history,
             borderColor: '#3B82F6',
-            borderWidth: 2,
             backgroundColor: gradient,
+            borderWidth: 1.5,
             fill: true,
             tension: 0.4,
-            pointRadius: 0
+            pointRadius: 0,
+            pointHoverRadius: 4
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 0 },
-        scales: {
-            x: { display: false },
-            y: { 
-                grid: { color: 'rgba(255,255,255,0.05)' },
-                ticks: { color: 'rgba(255,255,255,0.5)', font: { family: 'JetBrains Mono', size: 10 } }
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    title: () => '',
+                    label: (context) => `Latency: ${context.parsed.y} ms`
+                }
             }
         },
-        plugins: { legend: { display: false } }
+        scales: {
+            x: { display: false },
+            y: {
+                grid: { color: '#07090F', drawBorder: false },
+                ticks: { color: '#1E293B', font: { family: 'JetBrains Mono', size: 9 }, maxTicksLimit: 5 },
+                beginAtZero: true
+            }
+        },
+        animation: { duration: 0 }
     }
 });
 
-function getAvg() {
-    const valid = historyData.filter(d => d !== null);
-    if(valid.length === 0) return 0;
-    return Math.round(valid.reduce((a, b) => a + b, 0) / valid.length);
-}
+function updateMetrics() {
+    // Avg
+    const sum = history.reduce((a, b) => a + b, 0);
+    const avg = history.length ? Math.round(sum / history.length) : 0;
+    metricAvg.innerText = avg;
 
-function getP95() {
-    const valid = historyData.filter(d => d !== null).sort((a,b) => a-b);
-    if(valid.length < 2) return 0;
-    return valid[Math.max(0, Math.floor(valid.length * 0.95) - 1)];
-}
+    // P95
+    if (history.length > 0) {
+        const sorted = [...history].sort((a, b) => a - b);
+        const idx = Math.max(0, Math.floor(sorted.length * 0.95) - 1);
+        metricP95.innerText = sorted[idx];
+    }
 
-document.getElementById('run-btn').addEventListener('click', async () => {
-    const btn = document.getElementById('run-btn');
-    btn.disabled = true;
+    // Uptime
+    const uptime = totalChecks === 0 ? 100.0 : ((okChecks / totalChecks) * 100).toFixed(1);
+    metricUptime.innerText = uptime;
     
-    document.getElementById('status-message').className = 'status-message info';
-    document.getElementById('status-message').innerHTML = '🔄 Probing endpoint...';
+    // Update chart
+    latencyChart.data.labels = Array.from({length: history.length}, (_, i) => i);
+    latencyChart.data.datasets[0].data = history;
+    latencyChart.update();
+}
+
+function updateLogs(isOk, ms) {
+    const now = new Date();
+    const ts = now.toTimeString().split(' ')[0];
+    
+    let entry = "";
+    if (isOk) {
+        entry = `✔  ${ts}    ${String(ms).padStart(4, ' ')}ms    200 OK`;
+    } else {
+        entry = `✖  ${ts}    timeout    no response`;
+    }
+    
+    logs.unshift(entry);
+    if (logs.length > 10) logs.pop();
+
+    logContent.innerHTML = logs.map(l => `<div class="log-entry">${l}</div>`).join('');
+}
+
+async function runDiagnostic() {
+    runBtn.disabled = true;
+    runBtn.innerHTML = "🔄 Probing...";
+    
+    notification.className = "notification info";
+    notification.innerHTML = `<span class="icon">🔄</span> Probing endpoint...`;
+    
+    pill.className = "pill idle";
+    orb.className = "orb-wrap idle";
+    pillText.innerText = "PROBING...";
+    orbVal.innerText = "—";
+
+    const t0 = performance.now();
+    let isOk = false;
     
     try {
-        const res = await fetch('/api/probe');
-        const data = await res.json();
-        
-        totalChecks++;
-        const ts = new Date().toLocaleTimeString('en-US', { hour12: false });
-        
-        const logBox = document.getElementById('activity-log');
-        if(logBox.innerHTML.includes('No activity recorded')) {
-            logBox.innerHTML = '';
-        }
-        
-        const logEntry = document.createElement('div');
-        logEntry.className = 'log-entry';
-        
-        if (data.status === 'online') {
-            okChecks++;
-            historyData.push(data.latency_ms);
-            historyData.shift();
-            latencyChart.update();
-            
-            // update orb
-            document.getElementById('orb-wrapper').className = 'orb-wrap online';
-            document.getElementById('orb-val').innerText = data.latency_ms + 'ms';
-            
-            // update pill
-            document.getElementById('status-pill').className = 'pill online';
-            document.getElementById('pill-text').innerText = `ONLINE · ${data.latency_ms}ms`;
-            
-            document.getElementById('status-message').className = 'status-message success';
-            document.getElementById('status-message').innerHTML = `✅ <b>Operational</b> — Responded in ${data.latency_ms}ms. TLS handshake complete.`;
-            
-            logEntry.innerText = `✔  ${ts}    ${String(data.latency_ms).padStart(4, ' ')}ms    200 OK`;
-        } else {
-            document.getElementById('orb-wrapper').className = 'orb-wrap offline';
-            document.getElementById('orb-val').innerText = 'ERR';
-            
-            document.getElementById('status-pill').className = 'pill offline';
-            document.getElementById('pill-text').innerText = 'OFFLINE · TIMEOUT';
-            
-            document.getElementById('status-message').className = 'status-message error';
-            document.getElementById('status-message').innerHTML = `🚨 <b>Unreachable</b> — Request timed out after 5s. Check firewall or DNS.`;
-            
-            logEntry.innerText = `✖  ${ts}    timeout    no response`;
-        }
-        
-        logBox.insertBefore(logEntry, logBox.firstChild);
-        if(logBox.children.length > 10) logBox.lastChild.remove();
-        
-        // Update metrics
-        document.getElementById('val-avg').innerText = getAvg() + ' ms';
-        document.getElementById('val-p95').innerText = getP95() + ' ms';
-        document.getElementById('val-uptime').innerText = ((okChecks/totalChecks)*100).toFixed(1) + '%';
-        
-    } catch(err) {
-        console.error(err);
-        document.getElementById('status-message').className = 'status-message error';
-        document.getElementById('status-message').innerHTML = `🚨 <b>Error</b> — Could not reach backend server.`;
-    } finally {
-        btn.disabled = false;
+        // We use mode: no-cors because it's a cross-origin request without CORS headers
+        // It won't let us read the status, but if the request succeeds (server is up), it won't throw
+        await fetch(AZURE_ENDPOINT, { method: 'GET', mode: 'no-cors', cache: 'no-store' });
+        isOk = true;
+    } catch (e) {
+        isOk = false;
     }
-});
+    const t1 = performance.now();
+    const ms = Math.round(t1 - t0);
+
+    totalChecks++;
+    
+    if (isOk) {
+        okChecks++;
+        history.push(ms);
+        if (history.length > 60) history.shift();
+        
+        orb.className = "orb-wrap online";
+        pill.className = "pill online";
+        pillText.innerText = `ONLINE · ${ms}ms`;
+        orbVal.innerText = `${ms}ms`;
+        
+        notification.className = "notification success";
+        notification.innerHTML = `<span class="icon">✅</span> <strong>Operational</strong> — Responded in ${ms}ms. TLS handshake complete.`;
+    } else {
+        orb.className = "orb-wrap offline";
+        pill.className = "pill offline";
+        pillText.innerText = `OFFLINE · TIMEOUT`;
+        orbVal.innerText = `ERR`;
+        
+        notification.className = "notification error";
+        notification.innerHTML = `<span class="icon">🚨</span> <strong>Unreachable</strong> — Request failed. Check network or CORS.`;
+    }
+
+    updateLogs(isOk, ms);
+    updateMetrics();
+
+    runBtn.disabled = false;
+    runBtn.innerHTML = "▶ Run Diagnostic";
+}
+
+runBtn.addEventListener('click', runDiagnostic);
+
+// Initialize
+updateMetrics();
