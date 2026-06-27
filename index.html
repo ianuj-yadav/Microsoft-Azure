@@ -1,39 +1,50 @@
-<div class="navbar">
-  <div class="nav-brand">
-    <div class="nav-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
-        <path fill="#f35325" d="M0 0h11v11H0z"/>
-        <path fill="#81bc06" d="M12 0h11v11H12z"/>
-        <path fill="#05a6f0" d="M0 12h11v11H0z"/>
-        <path fill="#ffba08" d="M12 12h11v11H12z"/>
-      </svg>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpsCenter · Azure AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+          <path fill="#f35325" d="M0 0h11v11H0z"/>
+          <path fill="#81bc06" d="M12 0h11v11H12z"/>
+          <path fill="#05a6f0" d="M0 12h11v11H0z"/>
+          <path fill="#ffba08" d="M12 12h11v11H12z"/>
+        </svg>
+      </div>
+      Microsoft Azure
     </div>
-    Microsoft Azure
+    <div class="nav-links">
+      <span class="nav-link">Overview</span>
+      <span class="nav-link">Telemetry</span>
+      <span class="nav-link">Documentation</span>
+    </div>
   </div>
-  <div class="nav-links">
-    <span class="nav-link">Overview</span>
-    <span class="nav-link">Telemetry</span>
-    <span class="nav-link">Documentation</span>
-  </div>
-</div>
 
-<div class="hero">
-  <div class="hero-left">
-    <div class="eyebrow">Azure AI · anuj-ai · Central India</div>
-    <div class="hero-title">Ops<span class="accent">Center</span></div>
-    <div class="hero-desc">Endpoint telemetry for anuj-ai cognitive services.<br>Probe the endpoint to measure reachability and response latency.</div>
-    <div class="pill {orb_cls}">
-      <span class="pill-dot"></span>
-      {pill_txt}
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Azure AI · anuj-ai · Central India</div>
+      <div class="hero-title">Ops<span class="accent">Center</span></div>
+      <div class="hero-desc">Endpoint telemetry for anuj-ai cognitive services.<br>Probe the endpoint to measure reachability and response latency.</div>
+      <div class="pill {orb_cls}">
+        <span class="pill-dot"></span>
+        {pill_txt}
+      </div>
+    </div>
+    <div class="orb-wrap {orb_cls}">
+      <div class="orb-ring"></div>
+      <div class="orb-ring"></div>
+      <div class="orb-ring"></div>
+      <div class="orb-core">
+        <span class="orb-val">{orb_val}</span>
+        <span class="orb-lbl">latency</span>
+      </div>
     </div>
   </div>
-  <div class="orb-wrap {orb_cls}">
-    <div class="orb-ring"></div>
-    <div class="orb-ring"></div>
-    <div class="orb-ring"></div>
-    <div class="orb-core">
-      <span class="orb-val">{orb_val}</span>
-      <span class="orb-lbl">latency</span>
-    </div>
-  </div>
-</div>
+</body>
+</html>

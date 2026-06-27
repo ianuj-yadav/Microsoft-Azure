@@ -82,6 +82,12 @@ pill_txt = (f"ONLINE · {ms}ms" if s is True
 with open("index.html", "r", encoding="utf-8") as f:
     html_content = f.read()
 
+# Extract only the content inside the <body> tags to avoid injecting <html> into Streamlit
+import re
+body_match = re.search(r"<body[^>]*>(.*)</body>", html_content, re.IGNORECASE | re.DOTALL)
+if body_match:
+    html_content = body_match.group(1)
+
 st.markdown(html_content.format(
     orb_cls=orb_cls,
     pill_txt=pill_txt,
