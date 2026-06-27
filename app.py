@@ -118,7 +118,7 @@ with left_col:
 
     btn_col, _ = st.columns([1, 3])
     with btn_col:
-        go = st.button("▶  Run Diagnostic", use_container_width=True)
+        go = st.button("▶  Run Diagnostic", width="stretch")
 
     status_slot = st.empty()
 
