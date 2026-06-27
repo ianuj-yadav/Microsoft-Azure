@@ -1,113 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpsCenter · Azure AI</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-
-  <div class="navbar">
-    <div class="nav-brand">
-      <div class="nav-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
-          <path fill="#f35325" d="M0 0h11v11H0z"/>
-          <path fill="#81bc06" d="M12 0h11v11H12z"/>
-          <path fill="#05a6f0" d="M0 12h11v11H0z"/>
-          <path fill="#ffba08" d="M12 12h11v11H12z"/>
-        </svg>
-      </div>
-      Microsoft Azure
+<div class="navbar">
+  <div class="nav-brand">
+    <div class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+        <path fill="#f35325" d="M0 0h11v11H0z"/>
+        <path fill="#81bc06" d="M12 0h11v11H12z"/>
+        <path fill="#05a6f0" d="M0 12h11v11H0z"/>
+        <path fill="#ffba08" d="M12 12h11v11H12z"/>
+      </svg>
     </div>
-    <div class="nav-links">
-      <span class="nav-link">Overview</span>
-      <span class="nav-link">Telemetry</span>
-      <span class="nav-link">Documentation</span>
+    Microsoft Azure
+  </div>
+  <div class="nav-links">
+    <span class="nav-link">Overview</span>
+    <span class="nav-link">Telemetry</span>
+    <span class="nav-link">Documentation</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow">Azure AI · anuj-ai · Central India</div>
+    <div class="hero-title">Ops<span class="accent">Center</span></div>
+    <div class="hero-desc">Endpoint telemetry for anuj-ai cognitive services.<br>Probe the endpoint to measure reachability and response latency.</div>
+    <div class="pill {orb_cls}">
+      <span class="pill-dot"></span>
+      {pill_txt}
     </div>
   </div>
-
-  <div class="main-container">
-    <div class="hero">
-      <div class="hero-left">
-        <div class="eyebrow">Azure AI · anuj-ai · Central India</div>
-        <div class="hero-title">Ops<span class="accent">Center</span></div>
-        <div class="hero-desc">Endpoint telemetry for anuj-ai cognitive services.<br>Probe the endpoint to measure reachability and response latency.</div>
-        <div class="pill idle" id="status-pill">
-          <span class="pill-dot"></span>
-          <span id="pill-text">IDLE · NO PROBE</span>
-        </div>
-      </div>
-      <div class="orb-wrap idle" id="orb-wrapper">
-        <div class="orb-ring"></div>
-        <div class="orb-ring"></div>
-        <div class="orb-ring"></div>
-        <div class="orb-core">
-          <span class="orb-val" id="orb-val">—</span>
-          <span class="orb-lbl">latency</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="metrics-row">
-      <div class="metric-card">
-        <div class="metric-label">Service</div>
-        <div class="metric-value">Cognitive API</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Avg Latency</div>
-        <div class="metric-value" id="val-avg">0 ms</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">P95 Latency</div>
-        <div class="metric-value" id="val-p95">0 ms</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Uptime</div>
-        <div class="metric-value" id="val-uptime">100.0%</div>
-      </div>
-    </div>
-
-    <hr>
-
-    <div class="content-row">
-      <div class="left-col">
-        <h3>Probe</h3>
-        <button id="run-btn" class="run-btn">▶  Run Diagnostic</button>
-        <div id="status-message" class="status-message info">
-          ℹ️ No probe data yet. Click <b>▶ Run Diagnostic</b> to begin.
-        </div>
-
-        <h3 style="margin-top: 2rem;">Response Time · Last 60 Probes</h3>
-        <div class="chart-container">
-            <canvas id="latencyChart"></canvas>
-        </div>
-      </div>
-
-      <div class="right-col">
-        <h3>Resource</h3>
-        <div class="config-box">
-          <pre>Group     Azure-AI-Project-anuj
-Sub       Azure for Students
-Tier      S0  Standard
-Access    Public
-Protocol  HTTPS / TLS 1.2
-Region    Central India</pre>
-        </div>
-
-        <h3 style="margin-top: 2rem;">Activity Log</h3>
-        <div id="activity-log" class="activity-log">
-           <div class="log-empty">No activity recorded.</div>
-        </div>
-
-        <hr>
-        <div class="caption">Target: <code>https://anuj-ai.cognitiveservices.azure.com/</code></div>
-        <div class="caption">Manual refresh · click ▶ Run Diagnostic to probe</div>
-      </div>
+  <div class="orb-wrap {orb_cls}">
+    <div class="orb-ring"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-core">
+      <span class="orb-val">{orb_val}</span>
+      <span class="orb-lbl">latency</span>
     </div>
   </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+</div>
