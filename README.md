@@ -1,4 +1,3 @@
-```markdown
 # ☁️ Microsoft Azure
 
 A comprehensive collection of Microsoft Azure learning resources, hands-on labs, notes, and practical examples designed for beginners and aspiring Azure professionals.
