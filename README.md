@@ -110,7 +110,7 @@ This repository is useful for:
 
 ## 📖 Azure Certifications
 
-Useful for preparing for:
+Useful for preparing for:-
 
 - AZ-900 – Microsoft Azure Fundamentals
 - AZ-104 – Azure Administrator Associate
