@@ -1,3 +1,8 @@
 .venv
 __pycache__/
 *.pyc
+
+# Environment & Secrets
+.env
+*.env
+!.env.example
