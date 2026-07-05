@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionPulse · Azure AI Vision Studio (Project 3)</title>
+    <meta name="description" content="AI-powered Computer Vision and Image Analysis studio built on Microsoft Azure Cognitive Services Vision REST API with drag-and-drop FileReader preview.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ── Navigation Bar ─────────────────────────────────────────────────── -->
+    <header class="navbar">
+        <a href="#" class="nav-brand">
+            <div class="nav-logo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3" fill="#38bdf8"/>
+                </svg>
+            </div>
+            <span>Azure AI <span style="font-weight: 300; color: var(--text-muted);">·</span> Vision<span class="gradient-text">Pulse</span></span>
+        </a>
+        <nav class="nav-actions">
+            <a href="#workspace" class="nav-link">Studio</a>
+            <a href="#analytics" class="nav-link">Analytics</a>
+            <a href="readme.md" class="nav-link">Documentation</a>
+            <div class="status-badge" id="statusPill">
+                <span class="status-dot"></span>
+                <span id="pillText">SECURE BACKEND PROXY · V3.2</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ── Main Container ─────────────────────────────────────────────────── -->
+    <main class="container">
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="eyebrow">Phase 1 & 2 Complete · Drag-and-Drop AI Vision</span>
+            <h1>Computer Vision <span class="gradient-azure">Intelligence Studio</span></h1>
+            <p>Experience real-time Microsoft Azure AI Computer Vision. Drag and drop any image to perform instant neural captioning, object detection with bounding boxes, tag extraction, and dominant color analysis.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; align-items: center;">
+                <a href="#workspace" class="btn-primary" style="text-decoration: none;">🖼️ Launch Vision Studio</a>
+                <button type="button" class="btn-secondary" id="configToggleBtn">
+                    ⚙️ API & Proxy Settings <span id="configIcon" style="font-size: 0.7rem;">▼</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ── Settings Drawer (Phase 1 Cloud Infrastructure & Mode) ──────── -->
+        <div class="config-panel" id="configPanel">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem;">
+                <h3 style="font-size: 1.1rem; color: var(--cyan-light);">🔒 Cloud Infrastructure & Security Configuration</h3>
+                <span style="font-size: 0.75rem; color: #34d399; font-family: 'JetBrains Mono', monospace;">PHASE 1 CREDENTIALS</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.6rem;">
+                Best practice: When running the lightweight Node.js server (<code>node server.js</code>), API calls are routed through the local proxy so your Azure Key is never exposed in browser network inspection.
+            </p>
+            
+            <div class="mode-selector" style="margin-top: 1rem;">
+                <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+                    <input type="radio" name="apiMode" value="proxy" id="modeProxy" checked style="accent-color: #38bdf8;">
+                    🛡️ Secure Backend Proxy Mode (<code style="color:#34d399">localhost:3000</code>)
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+                    <input type="radio" name="apiMode" value="direct" id="modeDirect" style="accent-color: #38bdf8;">
+                    🌐 Direct Azure REST API Mode (Browser Client)
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+                    <input type="radio" name="apiMode" value="demo" id="modeDemo" style="accent-color: #8b5cf6;">
+                    ⚡ Offline Demo Mode
+                </label>
+            </div>
+
+            <div class="config-grid">
+                <div class="form-group">
+                    <label for="azureEndpointInput">Azure AI Vision Endpoint URL</label>
+                    <input type="text" id="azureEndpointInput" class="form-input" placeholder="https://your-resource.cognitiveservices.azure.com/">
+                </div>
+                <div class="form-group">
+                    <label for="azureKeyInput">Subscription Key 1 / Key 2</label>
+                    <input type="password" id="azureKeyInput" class="form-input" placeholder="Enter 32-character hex key...">
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 1.2rem;">
+                <button type="button" class="btn-primary" id="saveConfigBtn" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">💾 Save Configuration</button>
+            </div>
+        </div>
+
+        <!-- ── Studio Workspace Layout ────────────────────────────────────────── -->
+        <div class="workspace-grid" id="workspace">
+
+            <!-- ── Left Column: Phase 2 Drag-and-Drop Frontend ────────────────── -->
+            <section class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">📁 Image Input Studio</h2>
+                        <span class="card-subtitle">Drag & Drop or select an image to inspect with neural computer vision</span>
+                    </div>
+                    <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--cyan-light); background: rgba(56, 189, 248, 0.1); padding: 0.3rem 0.6rem; border-radius: 6px;">PHASE 2 FRONTEND</span>
+                </div>
+
+                <!-- Phase 2: Interactive Drop Zone -->
+                <div class="dropzone" id="dropZone">
+                    <div class="drop-icon">☁️</div>
+                    <div class="drop-text">
+                        <h3>Drag & Drop your image here</h3>
+                        <p>Supports PNG, JPEG, WEBP, or BMP up to 10MB. The FileReader API renders an instant local preview.</p>
+                    </div>
+                    <div class="dropzone-actions">
+                        <button type="button" class="btn-secondary" id="browseBtn" style="background: rgba(0, 120, 212, 0.2); border-color: rgba(56, 189, 248, 0.4); color: white;">
+                            📂 Browse Files
+                        </button>
+                    </div>
+                    <!-- Hidden input element for fallback file selection -->
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+
+                <!-- Image Preview Container (FileReader API Display) -->
+                <div class="preview-container" id="previewContainer">
+                    <div class="image-wrapper">
+                        <img id="previewImage" src="" alt="Selected image preview">
+                        <canvas id="boundingOverlay"></canvas>
+                        <div class="preview-toolbar">
+                            <span class="file-badge" id="fileInfoBadge">📄 image.jpg</span>
+                            <button type="button" class="btn-remove" id="removeImgBtn">✕ Remove Image</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick-Test Sample Image Chips -->
+                <div class="samples-section">
+                    <div class="samples-title">
+                        <span>⚡ Quick Test Sample Images</span>
+                        <span style="font-size: 0.7rem; font-weight: 400; color: var(--text-dim);">(Click any chip to load & analyze instantly)</span>
+                    </div>
+                    <div class="chip-grid">
+                        <div class="sample-chip" data-sample="city" style="background-image: url('https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=600&q=80');">
+                            <span class="chip-label">🌆 Cyberpunk City</span>
+                        </div>
+                        <div class="sample-chip" data-sample="dog" style="background-image: url('https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80');">
+                            <span class="chip-label">🐶 Golden Dog</span>
+                        </div>
+                        <div class="sample-chip" data-sample="nature" style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80');">
+                            <span class="chip-label">⛰️ Mountain Sunset</span>
+                        </div>
+                        <div class="sample-chip" data-sample="workspace" style="background-image: url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80');">
+                            <span class="chip-label">💻 Tech Workspace</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Action Area -->
+                <div class="action-area">
+                    <button type="button" class="btn-analyze" id="analyzeBtn" disabled>
+                        <span>⚡ Run Azure AI Vision Analysis</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- ── Right Column: AI Analysis Dashboard ────────────────────────── -->
+            <section class="card results-card" id="analytics">
+                <div class="card-header">
+                    <div>
+                        <h2 class="card-title">🧠 Cognitive Vision Intelligence</h2>
+                        <span class="card-subtitle">Real-time object detection, captioning, tags, and color telemetry</span>
+                    </div>
+                    <span id="latencyBadge" style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #34d399; display: none;">⏱️ 0 ms</span>
+                </div>
+
+                <!-- Empty State (Shown before analysis) -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">👁️</div>
+                    <h3 style="font-size: 1.25rem; color: var(--text-main); margin-bottom: 0.4rem;">No Image Analyzed Yet</h3>
+                    <p style="max-width: 320px;">Upload or drop an image on the left, then click <strong>Run Azure AI Vision Analysis</strong> to unlock deep neural insights.</p>
+                </div>
+
+                <!-- Loading State Spinner -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <h3 style="font-size: 1.2rem; color: var(--cyan-light); margin-bottom: 0.3rem;">Neural Processing in Progress...</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Communicating with Azure Cognitive Services servers...</p>
+                </div>
+
+                <!-- Dashboard Content (Shown after successful analysis) -->
+                <div class="dashboard-content" id="dashboardContent">
+                    
+                    <!-- Neural Caption Box -->
+                    <div class="caption-box">
+                        <div class="caption-header">
+                            <span class="caption-label">🤖 AI Generated Caption / Description</span>
+                            <span class="confidence-badge" id="captionConfidence">98.5% CONFIDENCE</span>
+                        </div>
+                        <div class="caption-text" id="captionText">
+                            "A view of a bustling city street at sunset with glowing lights and cars."
+                        </div>
+                    </div>
+
+                    <!-- Detected Tags Cloud -->
+                    <div class="metric-section">
+                        <div class="metric-header">
+                            <span>🏷️ Visual Tags & Keywords</span>
+                            <span id="tagCountBadge" style="color: var(--cyan-light); font-family: 'JetBrains Mono', monospace;">0 detected</span>
+                        </div>
+                        <div class="tags-cloud" id="tagsContainer">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Detected Objects & Bounding Boxes -->
+                    <div class="metric-section">
+                        <div class="metric-header">
+                            <span>📦 Detected Objects & Bounding Boxes</span>
+                            <span style="font-size: 0.75rem; color: #34d399;">Drawn on image canvas 🎨</span>
+                        </div>
+                        <div class="objects-grid" id="objectsContainer">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Dominant Color Analysis -->
+                    <div class="metric-section">
+                        <div class="metric-header">
+                            <span>🎨 Dominant Color & Palette Analysis</span>
+                            <span id="isBwBadge" style="font-size: 0.75rem; color: var(--text-muted);">Color Image</span>
+                        </div>
+                        <div class="colors-grid" id="colorsContainer">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Raw Telemetry JSON Viewer -->
+                    <div style="margin-top: 0.5rem;">
+                        <div class="telemetry-header" id="telemetryToggle">
+                            <span>📡 Azure API REST Telemetry & Raw JSON</span>
+                            <span id="telemetryIcon">▼</span>
+                        </div>
+                        <div class="telemetry-body" id="telemetryBody">
+                            <pre class="json-viewer" id="jsonViewer">{}</pre>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container" style="padding-top: 1rem; padding-bottom: 1rem;">
+            <p>⚡ VisionPulse · Built for Microsoft Azure Cognitive Services (Project 3) · Phase 1 Cloud Infra & Phase 2 Drag-and-Drop Frontend Complete</p>
+        </div>
+    </footer>
+
+    <!-- Core Javascript Logic -->
+    <script src="index.js"></script>
+</body>
+</html>
