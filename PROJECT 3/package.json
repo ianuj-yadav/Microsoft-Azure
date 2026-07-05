@@ -1,0 +1,26 @@
+{
+  "name": "azure-vision-pulse",
+  "version": "1.0.0",
+  "description": "VisionPulse · Azure AI Vision Studio (Project 3) with drag-and-drop frontend and secure lightweight Node.js proxy backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "azure",
+    "computer-vision",
+    "ai",
+    "drag-and-drop",
+    "express"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.7.0"
+  }
+}
