@@ -23,7 +23,6 @@ This repository contains Azure concepts, services, deployment examples, and prac
 - Azure Monitor
 - Azure Security
 - Azure Backup & Recovery
-- Azure CLI
 - ARM Templates
 - Azure DevOps Basics
 - Azure Best Practices
